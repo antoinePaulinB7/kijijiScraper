@@ -17,10 +17,17 @@ Apify.main(async () => {
             // });
 
             const data = await page.evaluate(
-              () =>  Array.from(document.querySelectorAll('.search-item')).forEach((elem) => {
-
-              })
+              () =>  Array.from(document.querySelectorAll('.search-item'))
+                          .map(elem => {
+                            let obj = {}
+                            obj.url = elem.querySelector('a.title').href
+                            obj.title = elem.querySelector('a.title').innerHTML.trim()
+                            obj.price = elem.querySelector('.price').innerHTML.trim()// map info title, description, price, location, views?
+                            return obj;
+                          })
             );
+
+            await Apify.pushData(data);
 
             await Apify.utils.enqueueLinks({ page, selector: 'a', pseudoUrls, requestQueue });
         },
