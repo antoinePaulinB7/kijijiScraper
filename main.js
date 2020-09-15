@@ -10,11 +10,6 @@ Apify.main(async () => {
         handlePageFunction: async ({ request, page }) => {
             const title = await page.title();
             console.log(`Title of ${request.url}: ${title}`);
-            // var infos = page.querySelectorAll('.search-item .info');
-
-            // infos.each((inf)=>{
-            //   console.log(inf);
-            // });
 
             const data = await page.evaluate(
               () =>  Array.from(document.querySelectorAll('.search-item'))
@@ -22,7 +17,7 @@ Apify.main(async () => {
                             let obj = {}
                             obj.url = elem.querySelector('a.title').href
                             obj.title = elem.querySelector('a.title').innerHTML.trim()
-                            obj.price = elem.querySelector('.price').innerHTML.trim()// map info title, description, price, location, views?
+                            obj.price = elem.querySelector('.price').innerHTML.trim()
                             return obj;
                           })
             );
