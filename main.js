@@ -2,6 +2,8 @@ const Apify = require('apify');
 
 Apify.main(async () => {
     const requestQueue = await Apify.openRequestQueue();
+    // Modify these urls to search the pages you want
+    // Just go on kijiji, input your search filters, and then copy the url here
     await requestQueue.addRequest({ url: 'https://www.kijiji.ca/b-appartement-condo/ville-de-montreal/c37l1700281?radius=4.0&price=__1000&address=Montr%C3%A9al%2C+QC+H2V&ll=45.516059,-73.604619&meuble=0' });
     const pseudoUrls = [new Apify.PseudoUrl('https://www.kijiji.ca/b-appartement-condo/ville-de-montreal/[(page-[0-9]+\/)?]c37l1700281?radius=4.0&price=__1000&address=Montr%C3%A9al%2C+QC+H2V&ll=45.516059,-73.604619&meuble=0')];
 
@@ -13,13 +15,13 @@ Apify.main(async () => {
 
             const data = await page.evaluate(
               () =>  Array.from(document.querySelectorAll('.search-item'))
-                          .map(elem => {
-                            let obj = {}
-                            obj.url = elem.querySelector('a.title').href
-                            obj.title = elem.querySelector('a.title').innerHTML.trim()
-                            obj.price = elem.querySelector('.price').innerHTML.trim()
-                            return obj;
-                          })
+                  .map(elem => {
+                    let obj = {}
+                    obj.url = elem.querySelector('a.title').href
+                    obj.title = elem.querySelector('a.title').innerHTML.trim()
+                    obj.price = elem.querySelector('.price').innerHTML.trim()
+                    return obj;
+                  })
             );
 
             await Apify.pushData(data);
